@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # Load the data
-data = pd.read_csv("C:/Users/Vista/Documents/Projects/DPV-Model/DPV_Model.csv")
+data = pd.read_csv("DPV_Model.csv")
 
 # Define indicators
 economic_indicators = ['Median_household_income', 'Employment_rate', 'Industrial_activity']
