@@ -31,6 +31,25 @@ for indicator in all_indicators:
 
 # Assign weights and calculate the aggregate score
 weights = {
+    'Median_household_income': 1,
+    'Employment_rate': 1,
+    'Industrial_activity': 1,
+    'Gen_expenditure': 1,
+    'Energy_spend_ratio': 1,
+    'Population_density': 1,
+    'Household_count': 1,
+    'Building_type_ID': 1,
+    'Building_type_GD': 1,
+    'Grid_supply_reliability': 1,
+    'Road_accessibility': 1,
+    'Safety': 1,
+    'Solar_panel_usage': 1,
+    'Solar_panel_adoption': 1,
+    'Emmission_Reduction': 1
+}
+
+'''
+weights = {
     'Median_household_income': 0.2,
     'Employment_rate': 0.15,
     'Industrial_activity': 0.15,
@@ -47,6 +66,7 @@ weights = {
     'Solar_panel_adoption':0.15,
     'Emmission_Reduction': 0.1
 }
+'''
 
 
 data['Aggregate_score'] = 0
