@@ -28,7 +28,7 @@ for indicator in all_indicators:
     data[indicator] = normalize(data[indicator])
 
 # Streamlit app
-st.title("DPV Model Scoring App")
+st.title("DPV Prioritization Model")
 
 st.sidebar.header("Adjust Weights")
 
