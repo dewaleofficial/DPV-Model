@@ -1,11 +1,11 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
-import streamlit_folium
-from streamlit_folium import folium_static
+import folium
 from folium import Choropleth, GeoJson
 from folium import DivIcon
 from folium.features import DivIcon
+from streamlit_folium import folium_static
 import geopandas as gpd
 
 #######################
