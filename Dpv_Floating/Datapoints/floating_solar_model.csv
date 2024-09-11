@@ -1,0 +1,15 @@
+Location,pH Value,Water Temp,Electrical Conductivity,Total Dissolve Solids,Salinity,Turbidity,Water Size,Land Availability Near Water Body for Supporting Infrastructure,Proximity of Land Availability to Water,Wind Speed,Water Current,Max Solar Value,Atmospheric Temperature,Anchor Point availability,Distance of anchor point to Water,Access road availability,Distance to access road,Type of access road,Accessible for heavy equipment,Available Grid Capacity (MVA),Energy Demand (MW),"Predominant Consumption Type (R,C,I) or Mixed",Proximity to nearest substation,Availability of Grid Connection,How safe is the environment,Incidence of Vandalism/Theft,"Is water body close to Schools? Healtcare Centers? Other strategic locations that increase viability, attract fi0ncing and promote renewable deployments"
+Okeira Kekere,7.61,27.6,691.8,349.5,0.35,52.8,10000,568.37,15.5,0.8,0.0816,409.7,29.1,0,0,1,107.96,0,1,150,63.72,0,1541.83844,1,5,1,0
+Akoka,6.56,29.4,878.7,442.5,0.45,64.9,10000,376.6,10.5,0.3,0.091,780,35.7,0.5,0,1,85.22,1,1,30,50.3,1,576.998629,1,5,1,1
+AGO,6.8,26.8,694.7,349.5,0.35,10.02,450000,262.922,23,0.6,0.0595,410.3,29.8,0,0,1,28.2,0,1,60,18.84,0,651.016034,1,2,1,0
+Festac,6.9,27.1,2470,1245,1.2,13.5,5000,240.433,10,2.4,0.0621,829.1,30.2,1,60,1,25,1,1,60,20.64286,1,487.492133,1,5,1,1
+S0ke Island,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0
+Ilase,7.7,28.4,5284,2762,8.37,170,5000,215,22,2.9,0.16,414,30.9,1,23.2,0,0,0,0,30,20.64286,0,21.5078,1,5,1,0
+Tin Can,7.1,23.1,2030,1028,9.87,17.6,5000,298.65,16.5,0.7,0,460.9,30.5,1,10,1,2,1,1,45,17.32,1,457.439524,1,5,1,1
+Flour Mill,6.7,27.9,2160,1093,11.2,22.9,5000,230.09,23.5,0.9,0,488,32.1,1,96.5,1,0,1,1,45,17.32,1,652.406142,1,3.5,1,1
+Ijora,7.29,28.8,2260,1145,11.16,23.1,10000,565.82,25,1.2,0.291,485,30.7,0,0,1,28.5,0,1,45,40.02,1,459.761534,1,3.5,1,1
+Oworo,6.86,27.8,630.4,317.4,0.33,66.9,10000,396.135,17.6,0.7,0.165,916.9,29.5,0,0,1,143.53,0,1,60,38.334,1,929.452067,1,2,1,0
+Agbowa,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,0,0,0,0,1,0
+Ijede,7.9,29.4,438.6,221.6,0.24,1262,5000,484.18,10.5,2.4,0.2,406.5,28.5,0,0,1,83.52,0,1,60,30.54,0,976.488737,1,2,1,1
+Owutu,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,0,0,0,0,1,0
+Badagry,7.6,26.7,96.3,94.5,23.1,0.09,10000,361.984,20.62,0.8,0.2,693.4,27.6,1,60,1,93.53,1,1,45,33.2,1,1954.701102,1,3.5,1,1
