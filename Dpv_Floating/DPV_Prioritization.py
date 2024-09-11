@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
-from streamlit_folium import st_folium, folium_static
 import seaborn as sns
 import matplotlib.pyplot as plt
 import folium
