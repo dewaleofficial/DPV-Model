@@ -170,12 +170,6 @@ with st.sidebar:
 
 
 
-
-
-
-
-
-
     #########################################################################
     # Function to format values with colored percentages based on score and weight
     def format_category(score, percentage, threshold):
@@ -471,12 +465,5 @@ with col[1]:
     # Alternatively, you can use st.container() if you need more complex layout or control
     with st.container():
         with st.expander('Summary', expanded=True):
-            # Download option for the ranked data
-            #st.download_button(
-            #    label="Download data as CSV",
-            #    data=summary_1_df.to_csv(index=False),
-             #   file_name='LGA_Score_Summary.csv',
-             #   mime='text/csv'
-           # )
             st.markdown(summary_1_df.to_html(escape=False, index=False), unsafe_allow_html=True)
 
