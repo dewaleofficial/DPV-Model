@@ -3,6 +3,7 @@ import pandas as pd
 import altair as alt
 import seaborn as sns
 import matplotlib.pyplot as plt
+from streamlit_folium import folium_static
 import folium
 from folium import Choropleth, GeoJson
 from folium.plugins import HeatMap
