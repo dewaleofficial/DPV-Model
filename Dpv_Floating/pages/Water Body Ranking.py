@@ -1,14 +1,6 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
-import folium
-from folium import Choropleth, GeoJson
-from folium.plugins import HeatMap
-from folium import DivIcon
-from folium.features import DivIcon
-import geopandas as gpd
-from shapely.geometry import shape
-from shapely.geometry import Point
 
 #######################
 # Page configuration

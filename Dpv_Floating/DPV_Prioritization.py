@@ -1,17 +1,12 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
-import seaborn as sns
-import matplotlib.pyplot as plt
 from streamlit_folium import folium_static
 import folium
 from folium import Choropleth, GeoJson
-from folium.plugins import HeatMap
 from folium import DivIcon
 from folium.features import DivIcon
 import geopandas as gpd
-from shapely.geometry import shape
-from shapely.geometry import Point
 
 #######################
 # Page configuration
