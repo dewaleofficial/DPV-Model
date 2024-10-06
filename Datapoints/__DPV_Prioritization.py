@@ -29,33 +29,6 @@ data = raw_df.copy()
 geojson_path = "Datapoints/nigeria_lga.json"
 
 
-# Normalize specific columns
-def normalize(column):
-    min_val = column.min()
-    max_val = column.max()
-    if min_val == max_val:
-        norm_dig = 100
-    else:
-        norm_dig = (column - min_val) / (max_val - min_val) * 100  # Multiply by 100 to keep consistency
-    return norm_dig
-
-data['Median_household_income'] = normalize(data['Median_household_income'])
-data['Employment_rate'] = normalize(data['Employment_rate'])
-data['Industrial_activity'] = normalize(data['Industrial_activity'])
-data['Gen_expenditure'] = normalize(data['Gen_expenditure'])
-data['Energy_spend_ratio'] = normalize(data['Energy_spend_ratio'])
-data['Population_density'] = normalize(data['Population_density'])
-data['Household_count'] = normalize(data['Household_count'])
-data['Safety'] = normalize(data['Safety'])
-data['Grid_supply_reliability'] = normalize(data['Grid_supply_reliability'])
-data['Road_accessibility'] = normalize(data['Road_accessibility'])
-data['Building_type_ID'] = normalize(data['Building_type_ID'])
-data['Building_type_GD'] = normalize(data['Building_type_GD'])
-data['Solar_panel_usage'] = normalize(data['Solar_panel_usage'])
-data['Solar_panel_adoption'] = normalize(data['Solar_panel_adoption'])
-data['Emmission_Reduction'] = normalize(data['Emmission_Reduction'])
-
-
 #######################
 # Sidebar
 with st.sidebar:
@@ -131,29 +104,32 @@ with st.sidebar:
     # Sub-weight structures for each group
     sub_weight_structures = { 
         "Developer": {
-            'Median_household_income': 8, 'Employment_rate': 6, 'Industrial_activity': 6,
-            'Gen_expenditure': 8, 'Energy_spend_ratio': 12,
-            'Population_density': 6, 'Household_count': 6, 'Safety': 3,
-            'Building_type_ID': 4.5, 'Building_type_GD': 4.5, 'Grid_supply_reliability': 15, 'Road_accessibility': 6,
-            'Solar_panel_usage': 3, 'Solar_panel_adoption': 6, 'Emmission_Reduction': 6
+            'Median_household_income': 40, 'Employment_rate': 30, 'Industrial_activity': 30,
+            'Gen_expenditure': 40, 'Energy_spend_ratio': 60,
+            'Population_density': 40, 'Household_count': 40, 'Safety': 20,
+            'Building_type_ID': 15, 'Building_type_GD': 15, 'Grid_supply_reliability': 50, 'Road_accessibility': 20,
+            'Solar_panel_usage': 20, 'Solar_panel_adoption': 40, 'Emmission_Reduction': 40
         },
         "Investor": {
-            'Median_household_income': 8, 'Employment_rate': 6, 'Industrial_activity': 6,
-            'Gen_expenditure': 8, 'Energy_spend_ratio': 12,
-            'Population_density': 6, 'Household_count': 6, 'Safety': 3,
-            'Building_type_ID': 4.5, 'Building_type_GD': 4.5, 'Grid_supply_reliability': 15, 'Road_accessibility': 6,
-            'Solar_panel_usage': 3, 'Solar_panel_adoption': 6, 'Emmission_Reduction': 6
+            'Median_household_income': 40, 'Employment_rate': 30, 'Industrial_activity': 30,
+            'Gen_expenditure': 40, 'Energy_spend_ratio': 60,
+            'Population_density': 40, 'Household_count': 40, 'Safety': 20,
+            'Building_type_ID': 15, 'Building_type_GD': 15, 'Grid_supply_reliability': 50, 'Road_accessibility': 20,
+            'Solar_panel_usage': 20, 'Solar_panel_adoption': 40, 'Emmission_Reduction': 40
         },
         "Government Official": {
-            'Median_household_income': 8, 'Employment_rate': 6, 'Industrial_activity': 6,
-            'Gen_expenditure': 8, 'Energy_spend_ratio': 12,
-            'Population_density': 6, 'Household_count': 6, 'Safety': 3,
-            'Building_type_ID': 4.5, 'Building_type_GD': 4.5, 'Grid_supply_reliability': 15, 'Road_accessibility': 6,
-            'Solar_panel_usage': 3, 'Solar_panel_adoption': 6, 'Emmission_Reduction': 6
+            'Median_household_income': 40, 'Employment_rate': 30, 'Industrial_activity': 30,
+            'Gen_expenditure': 40, 'Energy_spend_ratio': 60,
+            'Population_density': 40, 'Household_count': 40, 'Safety': 20,
+            'Building_type_ID': 15, 'Building_type_GD': 15, 'Grid_supply_reliability': 50, 'Road_accessibility': 20,
+            'Solar_panel_usage': 20, 'Solar_panel_adoption': 40, 'Emmission_Reduction': 40
         },
         "Custom": {
-            # For Custom, initial sub-weights can be equally distributed or copied from one of the predefined structures
-            # ...
+            'Median_household_income': 40, 'Employment_rate': 30, 'Industrial_activity': 30,
+            'Gen_expenditure': 40, 'Energy_spend_ratio': 60,
+            'Population_density': 40, 'Household_count': 40, 'Safety': 20,
+            'Building_type_ID': 15, 'Building_type_GD': 15, 'Grid_supply_reliability': 50, 'Road_accessibility': 20,
+            'Solar_panel_usage': 20, 'Solar_panel_adoption': 40, 'Emmission_Reduction': 40
         }
     }
 
@@ -163,7 +139,6 @@ with st.sidebar:
         options=list(weight_structures.keys())
     )
 
-
     # Define sliders and sub-sliders for "Custom" structure
     group_sliders = {}
     sub_sliders = {}
@@ -172,106 +147,43 @@ with st.sidebar:
         st.subheader("Adjust Custom Weights")
 
         # Main weight sliders for each indicator group
-        total_group_weight = 0
         for group_name, indicators in indicator_groups.items():
-            slider_value = st.slider(f"{group_name}", min_value=0.0, max_value=100.0, value=11.11, step=0.01)
+            slider_value = st.slider(f"{group_name}", min_value=0, max_value=100, value=20, step=2)
             group_sliders[group_name] = slider_value
-            total_group_weight += slider_value
 
-####
+            # Expander for sub-weight adjustment
             with st.expander(f"Adjust {group_name} Subweights"):
                 sub_sliders[group_name] = {}
-                total_sub_weight = 0
                 for indicator in indicators:
-                    sub_slider_value = st.slider(
-                        f"{indicator}",
-                        min_value=0.0,
-                        max_value=100.0,
-                        value=100 / len(indicators),
-                        step=0.1
-                    )
+                    sub_slider_value = st.slider(f"{indicator}", min_value=0, max_value=100,
+                                                 value=sub_weight_structures[selected_structure][indicator], step=1)
                     sub_sliders[group_name][indicator] = sub_slider_value
-                    total_sub_weight += sub_slider_value
 
-                # Normalize sub-weights to sum to 100
-                if total_sub_weight != 0:
-                    for indicator in indicators:
-                        sub_sliders[group_name][indicator] = (sub_sliders[group_name][indicator] / total_sub_weight) * 100
-####
-
-        # Normalize group weights to sum to 100
-        if total_group_weight != 0:
-            for group_name in group_sliders:
-                group_sliders[group_name] = (group_sliders[group_name] / total_group_weight) * 100
-
-#####
         selected_weights = group_sliders
 
-        # Calculate individual indicator weights based on sliders
-        indicator_weights = {}
-        for group_name, indicators in indicator_groups.items():
-            group_weight = group_sliders[group_name]
-
-            for indicator in indicators:
-                sub_weight = sub_sliders[group_name][indicator] / 100  # Normalize to fraction
-                indicator_weight = (group_weight) * sub_weight  # Calculate final indicator weight
-                indicator_weights[indicator] = indicator_weight
-        
         # Use the group slider values directly
         sum_economic = group_sliders['Economic Indicators']
         sum_financial = group_sliders['Financial Indicators']
         sum_social = group_sliders['Social Indicators']
         sum_infrastructure = group_sliders['Infrastructure Indicators']
         sum_environmental = group_sliders['Environmental Indicators']
-
     else:
         # Retrieve the weights based on the selected structure
         selected_weights = weight_structures[selected_structure]
 
-        # Display the main group weights as text
+        # For predefined structures, display the weights as text
         st.subheader(f"{selected_structure} Weights")
-        for group_name, weight in selected_weights.items():
+
+        # Display the main group weights as text
+        for group_name, weight in weight_structures[selected_structure].items():
             st.write(f"**{group_name}:** {weight}%")
 
-            # Expander to show subweights as text
-            with st.expander(f"View {group_name} Subweights"):
-                group_sub_weights = {}
-                total_sub_weight = 0
-                for indicator in indicator_groups[group_name]:
-                    sub_weight = sub_weight_structures[selected_structure][indicator]
-                    group_sub_weights[indicator] = sub_weight
-                    total_sub_weight += sub_weight
-
-                # Normalize sub-weights to sum to 100
-                for indicator in indicator_groups[group_name]:
-                    group_sub_weights[indicator] = (group_sub_weights[indicator] / total_sub_weight) * 100
-
-                # Display subweights as text
-                for indicator, sub_weight in group_sub_weights.items():
-                    st.write(f"- **{indicator}:** {sub_weight:.2f}%")
-
-        # Calculate individual indicator weights for predefined structures
-        indicator_weights = {}
+        # Display the sub-weights for each group
         for group_name, indicators in indicator_groups.items():
-            group_weight = selected_weights[group_name]
-
-            # Get sub-weights for this group and normalize
-            group_sub_weights = {}
-            total_sub_weight = 0
-            for indicator in indicators:
-                sub_weight = sub_weight_structures[selected_structure][indicator]
-                group_sub_weights[indicator] = sub_weight
-                total_sub_weight += sub_weight
-
-            # Normalize sub-weights to sum to 100
-            for indicator in indicators:
-                group_sub_weights[indicator] = (group_sub_weights[indicator] / total_sub_weight) * 100
-
-            # Calculate final indicator weights
-            for indicator in indicators:
-                sub_weight = group_sub_weights[indicator] / 100  # Normalize to fraction
-                indicator_weight = group_weight * sub_weight  # Calculate final indicator weight
-                indicator_weights[indicator] = indicator_weight       
+            with st.expander(f"{group_name} Subweights"):
+                for indicator in indicators:
+                    sub_weight = sub_weight_structures[selected_structure][indicator]
+                    st.write(f"{indicator}: {sub_weight}%")
 
 
         # Use the group slider values directly
@@ -280,27 +192,47 @@ with st.sidebar:
         sum_social = selected_weights['Social Indicators']
         sum_infrastructure = selected_weights['Infrastructure Indicators']
         sum_environmental = selected_weights['Environmental Indicators']
- 
 
-    # Calculate the 'Rating' for each location
+    # Retrieve the sub-weights based on the selected structure (Custom uses predefined sub-weights)
+    selected_sub_weights = sub_weight_structures[selected_structure]
+
+    # Normalize the data using min-max normalization
+    def normalize(column):
+        return (column - column.min()) / (column.max() - column.min())
+
+    for indicator in all_indicators:
+        data[indicator] = normalize(data[indicator])
+
+    # Calculate individual indicator weights
+    indicator_weights = {}
+    for group_name, indicators in indicator_groups.items():
+        group_weight = group_sliders[group_name] if selected_structure == "Custom" else selected_weights[group_name]  # Main group weight
+        
+        # Ensure that sub_sliders exist for the custom case
+        if selected_structure == "Custom":
+            total_sub_weight = sum(sub_sliders[group_name].values())
+            if total_sub_weight == 0:
+                total_sub_weight = 1  # Prevent division by zero
+
+        for indicator in indicators:
+            if selected_structure == "Custom":
+                total_sub_weight = sum(sub_sliders[group_name].values())
+                # For custom, scale sub-weight relative to total sub-weight
+                sub_weight = sub_sliders[group_name][indicator] / total_sub_weight
+            else:
+                # For predefined structures, use the predefined sub-weights
+                sub_weight = selected_sub_weights[indicator] / 100  # Normalizing to a percentage
+
+            # Combine group weight and sub-weight to get final weight for each indicator
+            indicator_weight = (group_weight * sub_weight)
+            indicator_weights[indicator] = indicator_weight
+
+    # Update the 'Rating' based on adjusted weights
     data['Rating'] = 0
 
     # Calculate the rating as the sum of each indicator's value multiplied by its weight
     for indicator, weight in indicator_weights.items():
-        data['Rating'] += data[indicator] * weight / 100  # Divide by 100 to adjust weight percentage
-
-    # Ensure that scores for each indicator group are calculated and reflected properly
-    for group_name, indicators in indicator_groups.items():
-        # Initialize the score column for the group
-        score_column = f"{group_name}_score"
-        data[score_column] = 0  # Initialize the score column to 0
-
-        # Sum up the scores for each indicator in the group
-        for indicator in indicators:
-            data[score_column] += data[indicator] * indicator_weights[indicator] / 100
-
-
-
+        data['Rating'] += data[indicator] * weight
 
     #########################################################################
     # Function to format values with colored percentages based on score and weight
@@ -324,13 +256,30 @@ with st.sidebar:
         else:
             return f'{score:.2f} (<span style="color:red;">{percentage:.2f}%</span>)'   # Red for below 50%
   
-    # Ensure sum_economic and others are not zero
-    sum_economic = max(sum_economic,1)
-    sum_financial = max(sum_financial,1)
-    sum_social = max(sum_social,1)
-    sum_infrastructure = max(sum_infrastructure,1)
-    sum_environmental = max(sum_environmental,1)
-    
+    # Ensure that scores for each indicator group are calculated and reflected properly
+    for group_name, indicators in indicator_groups.items():
+        score_column = f"{group_name}_score"
+
+        for indicator in indicators:
+            data[score_column] = 0        
+            data[score_column] += data[indicator] * indicator_weights[indicator]  # Apply the correct weight
+
+    # Ensure that scores for each indicator group are calculated and reflected properly
+    for group_name, indicators in indicator_groups.items():
+        group_weight = selected_weights[group_name] if selected_structure != "Custom" else group_sliders[group_name]
+        score_column = f"{group_name}_score"  # Change the naming convention for clarity
+       
+        for indicator in indicators:
+            data[indicator + '_score'] = data[indicator] * group_weight  # Calculate score for each indicator
+            data[score_column] = data[indicator + '_score']  # Assign score to new column
+    # Ensure that scores for each indicator group are calculated and reflected properly
+
+
+        sum_economic = max(sum_economic,1)
+        sum_financial = max(sum_financial,1)
+        sum_social = max(sum_social,1)
+        sum_infrastructure = max(sum_infrastructure,1)
+        sum_environmental = max(sum_environmental,1)
 
     # Format the results
     formatted_data = {
@@ -349,9 +298,6 @@ with st.sidebar:
         ),
         'Environmental': data['Environmental Indicators_score'].apply(
             lambda x: format_category(x, (x / sum_environmental) * 100, sum_environmental / 2)
-        ),
-        'Rated_value': (
-            data['Rating']
         ),
         'Rating': (
             data['Economic Indicators_score'] +
@@ -374,9 +320,9 @@ with st.sidebar:
     # Convert formatted data to DataFrame
     aggr_df = pd.DataFrame(formatted_data)
 
-    summary_1_df = aggr_df[['LGA', 'Economic', 'Financial', 'Social', 'Infrastructure', 'Environmental', 'Rating', 'Rated_value']]
+    summary_1_df = aggr_df[['LGA', 'Economic', 'Financial', 'Social', 'Infrastructure', 'Environmental', 'Rating']]
 
-    summary_2_df = aggr_df[['LGA', 'Economic', 'Financial', 'Social', 'Infrastructure', 'Environmental', 'Ratings', 'Rated_value']]
+    summary_2_df = aggr_df[['LGA', 'Economic', 'Financial', 'Social', 'Infrastructure', 'Environmental', 'Ratings']]
 
      # Sort data by the aggregate score
     summary_1_df = summary_1_df.sort_values(by='Rating', ascending=False)
@@ -648,7 +594,7 @@ with col[1]:
                             "Ratings",
                             format="%f",
                             min_value=0,
-                            max_value=100,
+                            max_value=max(summary_2_df.Ratings),
                         )}
                     )
 
