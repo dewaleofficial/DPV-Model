@@ -8,7 +8,6 @@ from folium.features import DivIcon
 from streamlit_folium import folium_static
 import geopandas as gpd
 import pandas as pd
-from sklearn.preprocessing import MinMaxScaler
 
 #######################
 # Page configuration
