@@ -1,6 +1,9 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
+import folium
+from streamlit_folium import st_folium
+
 
 #######################
 # Page configuration
@@ -17,6 +20,18 @@ alt.themes.enable("dark")
 raw_df = pd.read_csv('Datapoints/floating_solar_model.csv')
 
 data = raw_df.copy()
+
+cordinate_data_bf = pd.read_csv('Datapoints/coordinates_wb.csv')
+
+cordinate_data = pd.merge(cordinate_data_bf, data, on='Location', how='inner')
+
+# Drop rows with missing latitude or longitude values
+cordinate_data = cordinate_data.dropna(subset=['latitude', 'longitude'])
+
+# Convert coordinates to float
+cordinate_data['latitude'] = cordinate_data['latitude'].astype(float)
+cordinate_data['longitude'] = cordinate_data['longitude'].astype(float)
+
 
 columns_to_exclude = ['Location']
 
@@ -126,18 +141,27 @@ def normalize(column):
         norm_dig = (column - min_val) / (max_val - min_val) * 100  # Multiply by 100 to keep consistency
     return norm_dig
 
+def normalize_2(column):
+    min_val = column.min()
+    max_val = column.max()
+    if min_val == max_val:
+        norm_dig = 100
+    else:
+        norm_dig = (max_val - column) / (max_val - min_val) * 100  # Multiply by 100 to keep consistency
+    return norm_dig
+
 data['Land Availability Near Water Body for Supporting Infrastructure'] = normalize(data['Land Availability Near Water Body for Supporting Infrastructure'])
-data['Proximity of Land Availability to Water'] = normalize(data['Proximity of Land Availability to Water'])
-data['Proximity to nearest substation'] = normalize(data['Proximity to nearest substation'])
+data['Proximity of Land Availability to Water'] = normalize_2(data['Proximity of Land Availability to Water'])
+data['Proximity to nearest substation'] = normalize_2(data['Proximity to nearest substation'])
 data['Anchor Point availability'] = normalize(data['Anchor Point availability'])
 data['Access road availability'] = normalize(data['Access road availability'])
-data['Distance to access road'] = normalize(data['Distance to access road'])
+data['Distance to access road'] = normalize_2(data['Distance to access road'])
 data['Type of access road'] = normalize(data['Type of access road'])
 data['Accessible for heavy equipment'] = normalize(data['Accessible for heavy equipment'])
 data['Available Grid Capacity (MVA)'] = normalize(data['Available Grid Capacity (MVA)'])
 data['Energy Demand (MW)'] = normalize(data['Energy Demand (MW)'])
 data['Predominant Consumption Type (R,C,I) or Mixed'] = normalize(data['Predominant Consumption Type (R,C,I) or Mixed'])
-data['Proximity to nearest substation'] = normalize(data['Proximity to nearest substation'])
+data['Proximity to nearest substation'] = normalize_2(data['Proximity to nearest substation'])
 data['Availability of Grid Connection'] = normalize(data['Availability of Grid Connection'])
 data['How safe is the environment'] = normalize(data['How safe is the environment'])
 data['Incidence of Vandalism/Theft'] = normalize(data['Incidence of Vandalism/Theft'])
@@ -634,7 +658,7 @@ with st.sidebar:
 
 #######################
 # Dashboard Main Panel
-col = st.columns((2.5,2.5,3.0), gap='medium')
+col = st.columns((3.0,3.0,2.0), gap='medium')
 
 # CSS to style the metrics
 st.markdown("""
@@ -704,126 +728,152 @@ st.markdown("""
 with col[0]:
     st.markdown('#### Weights (%)')
 
-    # Metric with background
-    st.markdown(f"""
-        <div class="metric-container">
-            <div class="metric-label">
-                Water Quality 
-                <span class="tooltip-icon">ℹ️
-                    <span class="tooltip-text">This evaluates the characteristics of the water body, such as pH, temperature, salinity, etc to determine its suitability for hosting FPV systems without causing damage or inefficiency.</span>
-                </span>
+    inner_col1A, inner_col1B = st.columns(2)
+    
+    # Add content to inner_col1
+    with inner_col1A:
+
+        # Metric with background
+        st.markdown(f"""
+            <div class="metric-container">
+                <div class="metric-label">
+                    Water Quality 
+                    <span class="tooltip-icon">ℹ️
+                        <span class="tooltip-text">This evaluates the characteristics of the water body, such as pH, temperature, salinity, etc to determine its suitability for hosting FPV systems without causing damage or inefficiency.</span>
+                    </span>
+                </div>
+                <div class="metric-value">{percentage_Water_Quality}</div>
             </div>
-            <div class="metric-value">{percentage_Water_Quality}</div>
-        </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
 
-    st.markdown(f"""
-        <div class="metric-container">
-            <div class="metric-label">
-                Resource Assessment
-                <span class="tooltip-icon">ℹ️
-                    <span class="tooltip-text">Examines the size of the water body, nearby land availability, and environmental factors like wind speed and water current to assess the site’s physical capacity to support FPV installations and their infrastructure.</span>
-                </span>
+        st.markdown(f"""
+            <div class="metric-container">
+                <div class="metric-label">
+                    Resource Assessment
+                    <span class="tooltip-icon">ℹ️
+                        <span class="tooltip-text">Examines the size of the water body, nearby land availability, and environmental factors like wind speed and water current to assess the site’s physical capacity to support FPV installations and their infrastructure.</span>
+                    </span>
+                </div>
+                <div class="metric-value">{percentage_Resource_Assessment}</div>
             </div>
-            <div class="metric-value">{percentage_Resource_Assessment}</div>
-        </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
 
-    st.markdown(f"""
-        <div class="metric-container">
-            <div class="metric-label">
-                Solar Irradiation
-                <span class="tooltip-icon">ℹ️
-                    <span class="tooltip-text">Focuses on the site’s solar potential by measuring the maximum solar value and atmospheric conditions to ensure the viability of energy production.</span>
-                </span>
+        st.markdown(f"""
+            <div class="metric-container">
+                <div class="metric-label">
+                    Solar Irradiation
+                    <span class="tooltip-icon">ℹ️
+                        <span class="tooltip-text">Focuses on the site’s solar potential by measuring the maximum solar value and atmospheric conditions to ensure the viability of energy production.</span>
+                    </span>
+                </div>
+                <div class="metric-value">{percentage_Solar_Irradiation}</div>
             </div>
-            <div class="metric-value">{percentage_Solar_Irradiation}</div>
-        </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
 
 
-    st.markdown(f"""
-        <div class="metric-container">
-            <div class="metric-label">
-                Anchor Points
-                <span class="tooltip-icon">ℹ️
-                    <span class="tooltip-text">Considers the availability and distance of anchor points to secure the FPV systems.</span>
-                </span>
+        st.markdown(f"""
+            <div class="metric-container">
+                <div class="metric-label">
+                    Anchor Points
+                    <span class="tooltip-icon">ℹ️
+                        <span class="tooltip-text">Considers the availability and distance of anchor points to secure the FPV systems.</span>
+                    </span>
+                </div>
+                <div class="metric-value">{percentage_Anchor_Points}</div>
             </div>
-            <div class="metric-value">{percentage_Anchor_Points}</div>
-        </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
 
 
-    st.markdown(f"""
-        <div class="metric-container">
-            <div class="metric-label">
-                Site Accessibility
-                <span class="tooltip-icon">ℹ️
-                    <span class="tooltip-text">Ease of accessing the sites via access roads and its condition for heavy equipment for installation purpose.</span>
-                </span>
+        st.markdown(f"""
+            <div class="metric-container">
+                <div class="metric-label">
+                    Site Accessibility
+                    <span class="tooltip-icon">ℹ️
+                        <span class="tooltip-text">Ease of accessing the sites via access roads and its condition for heavy equipment for installation purpose.</span>
+                    </span>
+                </div>
+                <div class="metric-value">{percentage_Site_Accessibility}</div>
             </div>
-            <div class="metric-value">{percentage_Site_Accessibility}</div>
-        </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
 
 
+    # Add content to inner_col1
+    with inner_col1B:
+
+    # Creating two columns inside col[1]
+
+        st.markdown('#### ')
+
+        st.markdown(f"""
+            <div class="metric-container">
+                <div class="metric-label">
+                    Proximity to Consumption Centre
+                    <span class="tooltip-icon">ℹ️
+                        <span class="tooltip-text">How close it to energy consumers/demands.</span>
+                    </span>
+                </div>
+                <div class="metric-value">{percentage_Proximity_to_Consumption_Centers}</div>
+            </div>
+        """, unsafe_allow_html=True)
 
 
-# Creating two columns inside col[1]
+        st.markdown(f"""
+            <div class="metric-container">
+                <div class="metric-label">
+                    Proximity to Grid
+                    <span class="tooltip-icon">ℹ️
+                        <span class="tooltip-text">How close is the nearest substation and the availability of grid connection</span>
+                    </span>
+                </div>
+                <div class="metric-value">{percentage_Proximity_to_Grid}</div>
+            </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown(f"""
+            <div class="metric-container">
+                <div class="metric-label">
+                    Safety & Security
+                    <span class="tooltip-icon">ℹ️
+                        <span class="tooltip-text">Measure of how safe and secure the environment is</span>
+                    </span>
+                </div>
+                <div class="metric-value">{percentage_Safety_and_Security}</div>
+            </div>
+        """, unsafe_allow_html=True)
+
+
+        st.markdown(f"""
+            <div class="metric-container">
+                <div class="metric-label">
+                    Strategic Positioning
+                    <span class="tooltip-icon">ℹ️
+                        <span class="tooltip-text">Is water body close to a strategic locations that increase viability, attract financing and promote renewable deployments</span>
+                    </span>
+                </div>
+                <div class="metric-value">{percentage_Strategic_Positioning}</div>
+            </div>
+        """, unsafe_allow_html=True)
+
 with col[1]:
-    st.markdown('#### Weights (%)')
-
-    st.markdown(f"""
-        <div class="metric-container">
-            <div class="metric-label">
-                Proximity to Consumption Centre
-                <span class="tooltip-icon">ℹ️
-                    <span class="tooltip-text">How close it to energy consumers/demands.</span>
-                </span>
-            </div>
-            <div class="metric-value">{percentage_Proximity_to_Consumption_Centers}</div>
-        </div>
-    """, unsafe_allow_html=True)
+    st.markdown('#### Mapview')
 
 
-    st.markdown(f"""
-        <div class="metric-container">
-            <div class="metric-label">
-                Proximity to Grid
-                <span class="tooltip-icon">ℹ️
-                    <span class="tooltip-text">How close is the nearest substation and the availability of grid connection</span>
-                </span>
-            </div>
-            <div class="metric-value">{percentage_Proximity_to_Grid}</div>
-        </div>
-    """, unsafe_allow_html=True)
+    # Create a Folium map centered on the mean latitude and longitude
+    map_center = [cordinate_data['latitude'].mean(), cordinate_data['longitude'].mean()]
+    m = folium.Map(location=map_center, zoom_start=10)
 
-    st.markdown(f"""
-        <div class="metric-container">
-            <div class="metric-label">
-                Safety & Security
-                <span class="tooltip-icon">ℹ️
-                    <span class="tooltip-text">Measure of how safe and secure the environment is</span>
-                </span>
-            </div>
-            <div class="metric-value">{percentage_Safety_and_Security}</div>
-        </div>
-    """, unsafe_allow_html=True)
+    # Add each location as a marker with tooltip on the map
+    for _, row in cordinate_data.iterrows():
+        tooltip_text = f"{row['Location']}<br>pH Value: {row['pH Value']}<br>Water Temp: {row['Water Temp']}<br>Electrical Conductivity: {row['Electrical Conductivity']}<br>Water Temp: {row['Water Temp']}<br>Total Dissolve Solids: {row['Total Dissolve Solids']}<br>Salinity: {row['Salinity']}<br>Turbidity: {row['Turbidity']}<br>Water Size: {row['Water Size']}<br>Wind Speed: {row['Wind Speed']}<br>Water Current: {row['Water Current']}<br>Atmospheric Temperature: {row['Atmospheric Temperature']}<br>Available Grid Capacity (MVA): {row['Available Grid Capacity (MVA)']}<br>Energy Demand (MW): {row['Energy Demand (MW)']}"
+        folium.Marker(
+            location=[row['latitude'], row['longitude']],
+            popup=row['Location'],
+            tooltip=tooltip_text,
+            icon=folium.Icon(icon="info-sign")
+        ).add_to(m)
 
-
-    st.markdown(f"""
-        <div class="metric-container">
-            <div class="metric-label">
-                Strategic Positioning
-                <span class="tooltip-icon">ℹ️
-                    <span class="tooltip-text">Is water body close to a strategic locations that increase viability, attract financing and promote renewable deployments</span>
-                </span>
-            </div>
-            <div class="metric-value">{percentage_Strategic_Positioning}</div>
-        </div>
-    """, unsafe_allow_html=True)
-
+    # Display the map in Streamlit
+    st_folium(m, width=700, height=500)
 
 
 with col[2]:

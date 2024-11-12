@@ -97,13 +97,6 @@ with st.sidebar:
 
     # Predefined slider values for each group
     weight_structures = {
-        "Developer": {
-            'Economic Indicators': 20,
-            'Financial Indicators': 20,
-            'Social Indicators': 15,
-            'Infrastructure Indicators': 30,
-            'Environmental Indicators': 15
-        },
         "Investor": {
             'Economic Indicators': 30,
             'Financial Indicators': 30,
@@ -111,6 +104,15 @@ with st.sidebar:
             'Infrastructure Indicators': 20,
             'Environmental Indicators': 10
         },
+        
+        "Developer": {
+            'Economic Indicators': 20,
+            'Financial Indicators': 20,
+            'Social Indicators': 15,
+            'Infrastructure Indicators': 30,
+            'Environmental Indicators': 15
+        },
+
         "Government Official": {
             'Economic Indicators': 15,
             'Financial Indicators': 15,
@@ -129,13 +131,6 @@ with st.sidebar:
 
     # Sub-weight structures for each group
     sub_weight_structures = { 
-        "Developer": {
-            'Median_household_income': 8, 'Employment_rate': 6, 'Industrial_activity': 6,
-            'Gen_expenditure': 8, 'Energy_spend_ratio': 12,
-            'Population_density': 6, 'Household_count': 6, 'Safety': 3,
-            'Building_type_ID': 4.5, 'Building_type_GD': 4.5, 'Grid_supply_reliability': 15, 'Road_accessibility': 6,
-            'Solar_panel_usage': 3, 'Solar_panel_adoption': 6, 'Emmission_Reduction': 6
-        },
         "Investor": {
             'Median_household_income': 8, 'Employment_rate': 6, 'Industrial_activity': 6,
             'Gen_expenditure': 8, 'Energy_spend_ratio': 12,
@@ -143,6 +138,15 @@ with st.sidebar:
             'Building_type_ID': 4.5, 'Building_type_GD': 4.5, 'Grid_supply_reliability': 15, 'Road_accessibility': 6,
             'Solar_panel_usage': 3, 'Solar_panel_adoption': 6, 'Emmission_Reduction': 6
         },
+
+        "Developer": {
+            'Median_household_income': 8, 'Employment_rate': 6, 'Industrial_activity': 6,
+            'Gen_expenditure': 8, 'Energy_spend_ratio': 12,
+            'Population_density': 6, 'Household_count': 6, 'Safety': 3,
+            'Building_type_ID': 4.5, 'Building_type_GD': 4.5, 'Grid_supply_reliability': 15, 'Road_accessibility': 6,
+            'Solar_panel_usage': 3, 'Solar_panel_adoption': 6, 'Emmission_Reduction': 6
+        },
+
         "Government Official": {
             'Median_household_income': 8, 'Employment_rate': 6, 'Industrial_activity': 6,
             'Gen_expenditure': 8, 'Energy_spend_ratio': 12,
@@ -548,10 +552,10 @@ with col[0]:
 
 # Creating two columns inside col[1]
 with col[1]:
-    inner_col1, inner_col2 = st.columns(2)
+    inner_col = st.columns((3.0, 2.0), gap = 'medium')
 
     # Add content to inner_col1
-    with inner_col1:
+    with inner_col[0]:
         st.markdown('#### Geospatial Heatmap')
 
         # Create a Folium map centered around Lagos with a fixed size
@@ -627,11 +631,11 @@ with col[1]:
         ).add_to(m)
 
         # Render the map in the Streamlit app
-        folium_static(m, width= 350, height=400)
+        folium_static(m, width= 600, height=400)
 
 
     # Add content to inner_col2
-    with inner_col2:
+    with inner_col[1]:
         st.markdown('#### Local Government Ranking')
 
         st.dataframe(summary_2_df,
