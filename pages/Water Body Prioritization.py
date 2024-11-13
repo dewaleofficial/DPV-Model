@@ -161,7 +161,7 @@ data['Accessible for heavy equipment'] = normalize(data['Accessible for heavy eq
 data['Available Grid Capacity (MVA)'] = normalize(data['Available Grid Capacity (MVA)'])
 data['Energy Demand (MW)'] = normalize(data['Energy Demand (MW)'])
 data['Predominant Consumption Type (R,C,I) or Mixed'] = normalize(data['Predominant Consumption Type (R,C,I) or Mixed'])
-data['Proximity to nearest substation'] = normalize_2(data['Proximity to nearest substation'])
+#data['Proximity to nearest substation'] = normalize_2(data['Proximity to nearest substation'])
 data['Availability of Grid Connection'] = normalize(data['Availability of Grid Connection'])
 data['How safe is the environment'] = normalize(data['How safe is the environment'])
 data['Incidence of Vandalism/Theft'] = normalize(data['Incidence of Vandalism/Theft'])
@@ -237,17 +237,7 @@ with st.sidebar:
             'Safety and Security Indicators': 5.00,
             'Strategic Positioning Indicators': 5.00
         },
-        "Investor": {
-            'Water Quality Indicators': 15.00,
-            'Resource Assessment Indicators': 5.00,
-            'Solar Irradiation Indicators': 5.00,
-            'Anchor Points Indicators': 5.00,
-            'Site Accessibility Indicators': 10.00,
-            'Proximity to Consumption Centers Indicators': 20.00,
-            'Proximity to Grid Indicators': 15.00,
-            'Safety and Security Indicators': 10.00,
-            'Strategic Positioning Indicators': 15.00
-        },
+
         "Custom": {
             'Water Quality Indicators': 11.11,
             'Resource Assessment Indicators': 11.11,
@@ -301,44 +291,7 @@ with st.sidebar:
             # Strategic Positioning Indicators
             'Is water body close to Schools? Healtcare Centers? Other strategic locations that increase viability, attract financing and promote renewable deployments': 5.00
         },
-        "Investor": {
-            # Water Quality Indicators
-            'pH Value': 1.82,
-            'Water Temp': 2.73,
-            'Electrical Conductivity': 1.82,
-            'Total Dissolve Solids': 0.91,
-            'Salinity': 1.82,
-            'Turbidity': 0.91,
-            # Resource Assessment Indicators
-            'Water Size': 2.65,
-            'Land Availability Near Water Body for Supporting Infrastructure': 3.53,
-            'Proximity of Land Availability to Water': 3.53,
-            'Wind Speed': 2.65,
-            'Water Current': 2.65,
-            # Solar Irradiation Indicators
-            'Max Solar Value': 7.00,
-            'Atmospheric Temperature': 3.00,
-            # Anchor Points Indicators
-            'Anchor Point availability': 1.50,
-            'Distance of anchor point to Water': 3.50,
-            # Site Accessibility Indicators
-            'Access road availability': 6.00,
-            'Distance to access road': 1.00,
-            'Type of access road': 1.00,
-            'Accessible for heavy equipment': 2.00,
-            # Proximity to Consumption Centers Indicators
-            'Available Grid Capacity (MVA)': 5.00,
-            'Energy Demand (MW)': 5.00,
-            'Predominant Consumption Type (R,C,I) or Mixed': 5.00,
-            # Proximity to Grid Indicators
-            'Proximity to nearest substation': 12.50,
-            'Availability of Grid Connection': 12.50,
-            # Safety and Security Indicators
-            'How safe is the environment': 2.50,
-            'Incidence of Vandalism/Theft': 2.50,
-            # Strategic Positioning Indicators
-            'Is water body close to Schools? Healtcare Centers? Other strategic locations that increase viability, attract financing and promote renewable deployments': 5.00
-        },
+
         "Custom": {
             # For Custom, initial sub-weights can be equally distributed or copied from one of the predefined structures
             # ...
