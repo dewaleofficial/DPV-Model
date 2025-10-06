@@ -642,7 +642,7 @@ with col[1]:
                     column_order=("LGA", 
                                     "Ratings"),
                     hide_index=True,
-                    width=None,
+                    use_container_width=True,  
                     column_config={
                         "LGA": st.column_config.TextColumn(
                             "LGA",
