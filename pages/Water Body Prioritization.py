@@ -836,7 +836,7 @@ with col[2]:
                 column_order=("Water Body", 
                                 "Ratings"),
                 hide_index=True,
-                width=None,
+                use_container_width=True,  
                 column_config={
                     "Water Body": st.column_config.TextColumn(
                         "Water Body",
